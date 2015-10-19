@@ -1,3 +1,7 @@
+close all;
+clear all;
+clc;
+
 % Generate a transmit pulse with oversampling 16
 ups=16;
 
@@ -7,11 +11,28 @@ ups=16;
 txfilt = rraised_cosine(.22,ups,-6,6);
 txfilt = txfilt/sqrt(sum(txfilt.^2));
 
+% Time domain plot 
+   
+plot(1:length(txfilt), txfilt);
+title 'Time domain'
+
+% Change the value of the length?
+len = [6 12 24 48 96 192];
+
+freq = 20*log10(abs(fft(txfilt,10*length(txfilt)))); 
+figure;
+plot(1:length(freq), freq);
+
+
+
+
 %**********************************************************************************************
 % Question 0, Plot some time and frequency versions of the TX filter, 
 % change the values of the length (try 6,12,24,etc.).  For frequency, 
 % plot on a dB log-scale (for example using 20*log10(abs(fft(txfilt,10*length(txfilt))))) 
 %**********************************************************************************************
+
+%%
 
 % Set the intermediate carrier frequency (.125 - .4)
 f_IF = .4;
@@ -35,7 +56,7 @@ end
 % Question 1, explain the above, specifically why it corresponds to equation (1) in the handout.
 %**********************************************************************************************
 % Modulate by f_IF and compute real signal
-txsig1 = XXXXXXX
+txsig1 = XXXXXXX;
 
 % Plot the power spectrum (using fft if you like)
 figure(1)
