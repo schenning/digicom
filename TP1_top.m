@@ -13,15 +13,15 @@ txfilt = txfilt/sqrt(sum(txfilt.^2));
 
 % Time domain plot 
    
-plot(1:length(txfilt), txfilt);
+plot(linspace(-0.5,0.5,length(txfilt)), txfilt);
 title 'Time domain'
 
-% Change the value of the length?
+% Change the value of the length? WTF?
 len = [6 12 24 48 96 192];
 
 freq = 20*log10(abs(fft(txfilt,10*length(txfilt)))); 
 figure;
-plot(1:length(freq), freq);
+plot(linspace(-0.5,0.5,length(freq)), freq);
 
 
 
