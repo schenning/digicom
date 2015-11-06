@@ -101,5 +101,13 @@ figure;
 %%
  
 plot(power(abs(matched_flt1),2));
+close all
+
+[ymax0, ind0] = max(abs(matched_flt0));
+[ymax1, ind1] = max(abs(matched_flt1));
+[ymax2, ind2] = max(abs(matched_flt2));
+
+
+
 
 
