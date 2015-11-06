@@ -14,7 +14,10 @@ plot(imag(pss1_t));
 title 'imaginary part' 
 subplot(3,1,3)
 plot(abs(pss1_t));
-title 'magnitude response'
+title 'magnitude'
+
+% Both the real and imag part seem symmetrical and have about the same
+% energy 
 
 
 % 2.
@@ -72,7 +75,7 @@ s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
 
 
 % Do Sections 1.2 and 1.3 work her
-close all
+
  
 sig = s2;
 % Matched filters
@@ -98,14 +101,26 @@ plot(abs(matched_flt2),'g');
 hold off
 figure;
 
-%%
+%% Estimaton of N_f
  
 plot(power(abs(matched_flt1),2));
-close all
+
 
 [ymax0, ind0] = max(abs(matched_flt0));
 [ymax1, ind1] = max(abs(matched_flt1));
 [ymax2, ind2] = max(abs(matched_flt2));
+
+i_e   = [ymax0, ind0; ymax1, ind1; ymax2, ind2];
+[a,b] = max(i_e(:,1));
+i_pos = (i_e(b,2));
+
+% N_f   = i_pos - delta_pss;
+
+% Question 1.3.1
+% Task 3
+% Plotting the frequency 
+
+
 
 
 

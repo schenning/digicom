@@ -22,5 +22,7 @@ pss2_f = pss2_f0(1:2:length(pss2_f0)) + sqrt(-1)*pss2_f0(2:2:length(pss2_f0));
 pss2_f = [0 pss2_f(37:72) zeros(1,Nfft-73) pss2_f(1:36)];
 pss2_t = ifft(pss2_f);
 pss2_t = pss2_t / norm(pss2_t);
+Fs     = 15.36 * power(10,6);
+
 
 
