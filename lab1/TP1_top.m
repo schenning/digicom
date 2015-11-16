@@ -8,13 +8,13 @@ close all
 
 subplot(3,1,1)
 plot(real(pss1_t));
-title 'real part'
+title 'Real part'
 subplot(3,1,2)
 plot(imag(pss1_t));
-title 'imaginary part' 
+title 'Imaginary part' 
 subplot(3,1,3)
 plot(abs(pss1_t));
-title 'magnitude'
+title 'Magnitude'
 
 % Both the real and imag part seem symmetrical and have about the same
 % energy 
@@ -52,32 +52,30 @@ plot(20*log10(abs((conv(pss0_t,fliplr(conj(pss2_t)))))));
 title('Cross_correlation pss0_t vs pss2_t');
 
 
+%% Questions 1.2.1. 
+
+
+% 1. Acquiering snapshots of 10 ms duration.
+
 figure;
 % Read in sample file (example here)
 fd = fopen('usrp_samples.dat','r') ; 
 s = fread(fd,153600*2,'int16') ; 
 fclose(fd) ; 
 s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
-
-
-%plot an approximation to the power spectrum
-%figure(1)
+% Plot an approximation to the power spectrum
 f = linspace(-7.68e6,7.68e6,153600);
 plot(f,20*log10(abs(fftshift(fft(s2)))))
 axis([-7.68e6 7.68e6 100 150])
-
-
-% reading inn the required snapshot 
 fd = fopen('usrp_samples_AykutHenning2.dat','r') ;
 s = fread(fd,153600*2,'int16') ;
 fclose(fd) ;
-s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
-
-
-% Do Sections 1.2 and 1.3 work her
-
- 
+s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
 sig = s2;
+
+
+
+% 2. Plot of time and frequency representation of PSS-signals on DB-scale
 % Matched filters
 matched_flt0 = conv(sig,fliplr(conj(pss0_t)));
 matched_flt1 = conv(sig,fliplr(conj(pss1_t)));
@@ -101,7 +99,23 @@ plot(abs(matched_flt2),'g');
 hold off
 figure;
 
-%% Estimaton of N_f
+
+% 4. Changing the position of the antenna contributes to the 'changing
+% shape' of the main signal component. 
+
+
+
+
+%% Questions 1.3.1 
+
+% 1. The statitic is related to very closely related to the Maximum
+% likelihood detector, because it basically is, hehe.
+
+
+
+
+
+
  
 plot(power(abs(matched_flt1),2));
 
@@ -110,15 +124,19 @@ plot(power(abs(matched_flt1),2));
 [ymax1, ind1] = max(abs(matched_flt1));
 [ymax2, ind2] = max(abs(matched_flt2));
 
+
+% Dirty way to find index of the most likely pss, represented by b
 i_e   = [ymax0, ind0; ymax1, ind1; ymax2, ind2];
-[a,b] = max(i_e(:,1));
+[a,b] = max(i_e(:,1)); b=b-1;  
 i_pos = (i_e(b,2));
+
+
+
 
 % N_f   = i_pos - delta_pss;
 
-% Question 1.3.1
-% Task 3
-% Plotting the frequency 
+
+
 
 
 
