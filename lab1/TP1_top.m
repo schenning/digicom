@@ -67,7 +67,7 @@ s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
 f = linspace(-7.68e6,7.68e6,153600);
 plot(f,20*log10(abs(fftshift(fft(s2)))))
 axis([-7.68e6 7.68e6 100 150])
-fd = fopen('usrp_samples_AykutHenning2.dat','r') ;
+fd = fopen('usrp_samples.dat','r') ;
 s = fread(fd,153600*2,'int16') ;
 fclose(fd) ;
 s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
@@ -111,18 +111,12 @@ figure;
 % 1. The statitic is related to very closely related to the Maximum
 % likelihood detector, because it basically is, hehe.
 
-
-
-
-
-
- 
 plot(power(abs(matched_flt1),2));
 
 
-[ymax0, ind0] = max(abs(matched_flt0));
-[ymax1, ind1] = max(abs(matched_flt1));
-[ymax2, ind2] = max(abs(matched_flt2));
+[ymax0, ind0] = max(abs(matched_flt0(1:76800)) + abs(matched_flt0(76800+(1:76800))));
+[ymax1, ind1] = max(abs(matched_flt1(1:76800)) + abs(matched_flt1(76800+(1:76800))));
+[ymax2, ind2] = max(abs(matched_flt2(1:76800)) + abs(matched_flt2(76800+(1:76800))));
 
 
 % Dirty way to find index of the most likely pss, represented by b
@@ -131,16 +125,43 @@ i_e   = [ymax0, ind0; ymax1, ind1; ymax2, ind2];
 i_pos = (i_e(b,2));
 
 
+%% Problem 4
+N_f = ind2;
+%N_f = 3.636e+04;
+m=1; % 
+
+
+
+f=linspace(-74,75,150);
+k=1; 
+corr0  = zeros(1,length(f));
+corr5  = zeros(1,length(f)); 
+for fn = f,
+    pss_t_f = pss2_t .* exp(1i*2*pi*100*fn*(0:length(pss2_t)-1)/15.36e6);
+    corr0(k) = abs(conj(pss_t_f)*s2(N_f -1024+(1:length(pss2_t))));
+    corr5(k) = abs(conj(pss_t_f)*s2(N_f +76800 -1024 +(1:length(pss2_t))));
+    k=k+1; 
+end
+
+[d, fu]= max(corr0 + corr5);
+fu = fu +f(1) -1;
+
+s2 = s2 .*exp(-1i * 2*pi*100 * fu *(0:length(s2)-1)/15.36e6).';
+
+
+figure;
+plot(f,corr0)
+hold on
+plot(f,corr5,'r');
+
+
+
+
+
+
+
 
 
 % N_f   = i_pos - delta_pss;
-
-
-
-
-
-
-
-
 
 
