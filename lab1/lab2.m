@@ -9,9 +9,12 @@ s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
 s2= s2.* exp(-1i * 2*pi*100 * 17 *(0:length(s2)-1)/15.36e6).';
 
 
+%Remember to also do the same for subframe5, ie the same operation as sss_e
+
 N_f = ind2-15; %needs to be changed for every new ind
 sss_e = [];
 ss0 = s2((N_f-72-1024-1023):(N_f-72-1024));
+ss5 = s2((N_f-72-1024-1023 + 76800):(N_f-72-1024 + 76800));
 pss0 = s2((N_f -1024): (N_f));
 p_f = fft(pss0, 1024);
 p_f2(1:36) =  p_f(1024 + (-35:0)) ;
@@ -21,6 +24,7 @@ figure;
 stem(abs(fftshift(s_f)))
 title 's_f'
 sss_e(1:36)= s_f((1024-35):1024);
+
 sss_e(37:72)= s_f(2:37);
 figure;
 stem(abs(sss_e));
@@ -57,10 +61,40 @@ pss2_f_extracted = pss2_f0(1:2:length(pss2_f0)) + sqrt(-1)*pss2_f0(2:2:length(ps
    plot(real(H_n),'r');
    figure
    plot(sss_comp,'x');
+   title 'constellation'
    axis([-max(abs(sss_comp)) max(abs(sss_comp)) -1.5*max(abs(sss_comp)) 1.5*max(abs(sss_comp))])
    
    
  
 % c)
+
+   sssCorr00 = d0(3:3:end,:) *ss0.';  % Husk å bytte til rigktig startverdi hvis det byttes pss
+   sssCorr55 = d5(3:3:end,:) *ss5 .';
+   sssCorr50 = d0(3:3:end,:) *ss0 .';
+   sssCorr05 = d0(3:3:end,:) *ss5 .';
+ 
+   
+   sss05    =   sssCorr00 + sssCorr55;
+   sss50    =   sssCorr05 + sssCorr50; 
+   plot(sss05)
+   title 'sss05'
+   figure;
+   plot(sss50)
+   title 'sss50'
+   
+  
+   [mx, inx]  = max(sss05,sss50)
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
  
 %h_pss = cconv(conj(pss_2f),
