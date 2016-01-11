@@ -4,11 +4,11 @@ sss;
 close all
  
 % Read in sample file (example here)
-fd = fopen(inputfile,'r') ;
-s = fread(fd,153600*2,'int16') ;
-fclose(fd) ;
-s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
-s2= s2.* exp(-1i * 2*pi*100 * 17 *(0:length(s2)-1)/15.36e6).';
+% fd = fopen(inputfile,'r') ;
+% s = fread(fd,153600*2,'int16') ;
+% fclose(fd) ;
+% s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
+% s2= s2.* exp(-1i * 2*pi*100 * 17 *(0:length(s2)-1)/15.36e6).';
 
 
 %Remember to also do the same for subframe5, ie the same operation as sss_e
@@ -65,6 +65,7 @@ switch PSS_index
         
     otherwise
         fprintf('Error happend\n');
+        return
 end
 
         
@@ -83,7 +84,7 @@ plot(real(H_n),'r');
 figure
 plot(sss_comp,'x');
 title 'constellation'
-axis([-max(abs(sss_comp)) max(abs(sss_comp)) -1.5*max(abs(sss_comp)) 1.5*max(abs(sss_comp))])
+axis([-max(abs(sss_comp)) max(abs(sss_comp)) -6*max(abs(sss_comp)) 6*max(abs(sss_comp))])
    
 
 sss_estimate  = conj(H_n).*sss_extracted0;
@@ -104,12 +105,31 @@ sss50     = sssCorr05 + sssCorr50;
 
 
 stem(sss50)
+figure;
+stem(sss05)
 title 'sss05'
 
 
 
   
-[mx05, idx05]  = max(sss50);
+[mx05, idx05]  = max(sss05);
+[mx50,idx50] = max(sss50);
+
+
+% tmp = [mx05, idx05; mx50, idx50];
+% [mx,inx]  = max(tmp(:,1));
+% sd = tmp(inx,inx+1)
+
+
+
+tmp = max(idx05,idx50);
+
+N_idcell = 3*(tmp-1) + PSS_index;
+
+fprintf('%d\n', N_idcell);
+
+
+
 
 
    

@@ -4,7 +4,7 @@ close all
 
 
 pss %Generate the PSS signals (pss0_t,pss1_t,pss2_t)
-inputfile = 'usrp_sample_1.dat'; % Snapshot of signal from antenna
+inputfile = 'usrp_samples_SFR.dat'; % Snapshot of signal from antenna
 
 
 
