@@ -67,7 +67,7 @@ s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ;
 f = linspace(-7.68e6,7.68e6,153600);
 plot(f,20*log10(abs(fftshift(fft(s2)))))
 axis([-7.68e6 7.68e6 100 150])
-fd = fopen('usrp_samples.dat','r') ;
+fd = fopen('usrp_samples_AykutHenning3.dat','r') ;
 s = fread(fd,153600*2,'int16') ;
 fclose(fd) ;
 s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
@@ -95,12 +95,13 @@ plot(abs(matched_flt0),'r');
 hold on
 plot(abs(matched_flt1),'b');
 plot(abs(matched_flt2),'g');
-% steepest decent algoritm
+
 hold off
 figure;
 
 
-% 4. Changing the position of the antenna contributes to the 'changing
+% 4. Changing the position of the antenna does change the channels charasteristic
+% snd contributes to the 'changing
 % shape' of the main signal component. 
 
 
@@ -153,6 +154,8 @@ figure;
 plot(f,corr0)
 hold on
 plot(f,corr5,'r');
+
+PSS_index = b;
 
 
 

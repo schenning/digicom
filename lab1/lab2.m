@@ -1,4 +1,5 @@
 % Lab 2 Digicom
+TP1_top;
 close all
  
 % Read in sample file (example here)
