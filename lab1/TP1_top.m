@@ -1,6 +1,18 @@
-%Generate the PSS signals (pss0_t,pss1_t,pss2_t)
-pss
 close all
+
+
+
+
+pss %Generate the PSS signals (pss0_t,pss1_t,pss2_t)
+inputfile = 'usrp_sample_1.dat'; % Snapshot of signal from antenna
+
+
+
+
+
+
+
+
 %% Section 1.1.1
 %
 % 1. 
@@ -57,21 +69,23 @@ title('Cross_correlation pss0_t vs pss2_t');
 
 % 1. Acquiering snapshots of 10 ms duration.
 
-figure;
+%figure;
 % Read in sample file (example here)
-fd = fopen('usrp_samples.dat','r') ; 
-s = fread(fd,153600*2,'int16') ; 
-fclose(fd) ; 
-s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
+%fd = fopen('usrp_samples.dat','r') ; 
+%s = fread(fd,153600*2,'int16') ; 
+%fclose(fd) ; 
+%s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
 % Plot an approximation to the power spectrum
-f = linspace(-7.68e6,7.68e6,153600);
-plot(f,20*log10(abs(fftshift(fft(s2)))))
+%f = linspace(-7.68e6,7.68e6,153600);
+%figure; plot(f,20*log10(abs(fftshift(fft(s2)))))
 axis([-7.68e6 7.68e6 100 150])
-fd = fopen('usrp_samples_AykutHenning3.dat','r') ;
+fd = fopen(inputfile,'r') ;
 s = fread(fd,153600*2,'int16') ;
 fclose(fd) ;
 s2 = s(1:2:end) + sqrt(-1)*s(2:2:end) ; 
 sig = s2;
+f = linspace(-7.68e6,7.68e6,153600);
+figure; plot(f,20*log10(abs(fftshift(fft(s2)))))
 
 
 
@@ -123,48 +137,84 @@ plot(power(abs(matched_flt1),2));
 % Dirty way to find index of the most likely pss, represented by b
 i_e   = [ymax0, ind0; ymax1, ind1; ymax2, ind2];
 [a,b] = max(i_e(:,1)); b=b-1;  
-i_pos = (i_e(b,2));
+i_pos = (i_e(b+1,2));
 
 
-%% Problem 4
-N_f = ind2;
-%N_f = 3.636e+04;
-m=1; % 
+%% Problem 4: Frequency-offset estimation for different PSS-indexes(0,1,2)
 
+N_f = i_pos;
+PSS_index = b;
+if PSS_index==2
+    m=1; 
+    f=linspace(-74,75,150);
+    k=1; 
+    corr0  = zeros(1,length(f));
+    corr5  = zeros(1,length(f)); 
+    for fn = f,
+        pss_t_f = pss2_t .* exp(1i*2*pi*100*fn*(0:length(pss2_t)-1)/15.36e6);
+        corr0(k) = abs(conj(pss_t_f)*s2(N_f -1024+(1:length(pss2_t))));
+        corr5(k) = abs(conj(pss_t_f)*s2(N_f +76800 -1024 +(1:length(pss2_t))));
+        k=k+1; 
+    end
 
+    [d, fu]= max(corr0 + corr5);
+    fu = fu +f(1) -1;
+    s2 = s2 .*exp(-1i * 2*pi*100 * fu *(0:length(s2)-1)/15.36e6).';
+    figure;
+    plot(f,corr0)
+    hold on
+    plot(f,corr5,'r');
 
-f=linspace(-74,75,150);
-k=1; 
-corr0  = zeros(1,length(f));
-corr5  = zeros(1,length(f)); 
-for fn = f,
-    pss_t_f = pss2_t .* exp(1i*2*pi*100*fn*(0:length(pss2_t)-1)/15.36e6);
-    corr0(k) = abs(conj(pss_t_f)*s2(N_f -1024+(1:length(pss2_t))));
-    corr5(k) = abs(conj(pss_t_f)*s2(N_f +76800 -1024 +(1:length(pss2_t))));
-    k=k+1; 
 end
 
-[d, fu]= max(corr0 + corr5);
-fu = fu +f(1) -1;
+if PSS_index==1
+    m=1;
+    f=linspace(-74,75,150);
+    k=1; 
+    corr0  = zeros(1,length(f));
+    corr5  = zeros(1,length(f)); 
+    for fn = f,
+        pss_t_f = pss1_t .* exp(1i*2*pi*100*fn*(0:length(pss1_t)-1)/15.36e6);
+        corr0(k) = abs(conj(pss_t_f)*s2(N_f -1024+(1:length(pss1_t))));
+        corr5(k) = abs(conj(pss_t_f)*s2(N_f +76800 -1024 +(1:length(pss1_t))));
+        k=k+1; 
+    end
 
-s2 = s2 .*exp(-1i * 2*pi*100 * fu *(0:length(s2)-1)/15.36e6).';
-
-
-figure;
-plot(f,corr0)
-hold on
-plot(f,corr5,'r');
-
-PSS_index = b;
-
-
+    [d, fu]= max(corr0 + corr5);
+    fu = fu +f(1) -1;
+    s2 = s2 .*exp(-1i * 2*pi*100 * fu *(0:length(s2)-1)/15.36e6).';
+    figure;
+    plot(f,corr0)
+    hold on
+    plot(f,corr5,'r');
+end
 
 
 
+if PSS_index==0
+    m=1; 
+    f=linspace(-74,75,150);
+    k=1; 
+    corr0  = zeros(1,length(f));
+    corr5  = zeros(1,length(f)); 
+    for fn = f,
+        pss_t_f = pss0_t .* exp(1i*2*pi*100*fn*(0:length(pss0_t)-1)/15.36e6);
+        corr0(k) = abs(conj(pss_t_f)*s2(N_f -1024+(1:length(pss0_t))));
+        corr5(k) = abs(conj(pss_t_f)*s2(N_f +76800 -1024 +(1:length(pss0_t))));
+        k=k+1; 
+    end
+    [d, fu]= max(corr0 + corr5);
+    fu = fu +f(1) -1;
+    s2 = s2 .*exp(-1i * 2*pi*100 * fu *(0:length(s2)-1)/15.36e6).';
+    figure;
+    plot(f,corr0)
+    hold on
+    plot(f,corr5,'r');
+end
 
 
 
 
-% N_f   = i_pos - delta_pss;
+
 
 
