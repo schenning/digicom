@@ -1,0 +1,1 @@
+600 carriers, 100 white, 100 red. they are sep by 6 RE need to knwo where they are, depends on the cellID. gives qpsk of r and w
