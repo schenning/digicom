@@ -9,7 +9,7 @@ qpsk(4) = (1-sqrt(-1))/sqrt(2);
 mprime = 110 - N_RB_DL;
 k=0;
 
-for m=0 : (2*N_RB_DL),
+for m=0 : (2*N_RB_DL)-1,
 
     mprime_dword     = uint32(floor(mprime/16));
     mprime_qpsk_symb = uint32(rem(mprime,16));
