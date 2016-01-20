@@ -101,6 +101,10 @@ hold on
 plot(20*log10(abs(H1_11_est)),'b')
 
 
+% Applaying the conjugated channel estiamtes to the received resource
+% elements 
+
+
 
 
 
