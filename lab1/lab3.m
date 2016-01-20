@@ -102,6 +102,7 @@ hold on
 plot(20*log10(abs(H1_11_est)),'b')
 
 
+
 % Interpolation of symbol 7_0 and 7_1.
 % 
 
@@ -111,6 +112,7 @@ RS11_0_interp = interp1(linspace(1,100,length(RS11_0)), RS11_0, linspace(1,100,6
 RS11_1_interp = interp1(linspace(1,100,length(RS11_1)), RS11_1, linspace(1,100,6*length(RS11_1)));
 
 subplot(2,2,1)
+
 
 
 
