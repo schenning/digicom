@@ -45,10 +45,10 @@ v=mod(N_idcell,6) +1;
 
 
 
-RS70 = R_e(v:6:end,1); % for p=0 
-RS71 = R_e(mod(v+3,6):6:end,1); % for p=1
-RS110= R_e(mod(v+3,6):6:end,5); % p=0
-RS111= R_e(v:6:end,5); % p=1
+RS7_0 = R_e(v:6:end,1); % for p=0 
+RS7_1 = R_e(mod(v+3,6):6:end,1); % for p=1
+RS11_0= R_e(mod(v+3,6):6:end,5); % p=0
+RS11_1= R_e(v:6:end,5); % p=1
 
 idxPRB22 = 12*22+1; % startindex of PRB22
 
@@ -70,9 +70,10 @@ for i=1:48
 end
 
 for i=1:48
-    if RE8(i) == 0
-        RE8(i)= [];
-    end
+    if RE8(i) == 0                                                                                                                                         
+        RE8(i)= [];                                                                                                                                             
+    end                                                                                                                                                    
+                                                                                                                                                            
 end
 
 
@@ -83,10 +84,10 @@ RE = [RE10 ;RE9 ;RE8 ; RE7];
 
 % channel estimation
 
-H0_7_est  = RS70.* p_l_Ns(1,:).';
-H1_7_est  = RS71.* p_l_Ns(1,:).';
-H0_11_est = RS110.*p_l_Ns(2,:).';
-H1_11_est = RS111.*p_l_Ns(2,:).';
+H0_7_est  = RS7_0.* p_l_Ns(1,:).';
+H1_7_est  = RS7_1.* p_l_Ns(1,:).';
+H0_11_est = RS11_0.*p_l_Ns(2,:).';
+H1_11_est = RS11_1.*p_l_Ns(2,:).';
 
 figure;
 subplot(2,1,1)
@@ -100,6 +101,16 @@ plot(20*log10(abs(H1_7_est)),'r')
 hold on
 plot(20*log10(abs(H1_11_est)),'b')
 
+
+% Interpolation of symbol 7_0 and 7_1.
+% 
+
+RS7_0_interp  = interp1(linspace(1,100,length(RS7_0)), RS7_0, linspace(1,100,6*length(RS7_0)));
+RS7_1_interp  = interp1(linspace(1,100,length(RS7_1)), RS7_1, linspace(1,100,6*length(RS7_1)));
+RS11_0_interp = interp1(linspace(1,100,length(RS11_0)), RS11_0, linspace(1,100,6*length(RS11_0)));
+RS11_1_interp = interp1(linspace(1,100,length(RS11_1)), RS11_1, linspace(1,100,6*length(RS11_1)));
+
+subplot(2,2,1)
 
 
 
